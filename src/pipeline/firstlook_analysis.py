@@ -7,57 +7,62 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
 from pathlib import Path
-from encoding_data import label_encoder
+from . import encoding_data
 
 # Получение корня проекта
-sys.path.append(str(Path(__file__).resolve().parents[1]))
-from utils.paths import project_root
+#sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 # Класс для обработки данных
-class DataProcessor:
-    def __init__(self, data_file: str, plot_types=['histogram', 'boxplot', 'heatmap']):
+class DataChecker:
+    def __init__(self, data_file: str, project_root: Path, plot_types=['histogram', 'boxplot', 'heatmap']):
 
         self.data_file = data_file
         self.data = pd.read_csv(self.data_file, encoding='utf-8')
+        self.project_root = project_root
         self.plot_types = plot_types
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.logger = logging.getLogger(__name__)
 
     def check_data(self):
 
-        # Создаем подпапку в которой будут храниться данные и настраиваем логи
-        data_path = str(project_root) + "/data/processed/"
-        logging.basicConfig(
-            filename=data_path + f'check_{self.timestamp}.log',
-            level=logging.INFO,
-            format='%(message)s',
-            encoding='utf-8'
-        )
+        self.logger.info("Начало работы firstlook_analysis.check_data")
 
-        # Изучаем стандартные числовые характеристики и смотрим на датасет
-        logging.info(self.data.head(15).to_string())
-        logging.info('\n' + str(self.data.dtypes))
+        self.logger.info("Организация хранения данных о датасете")
+        # Создаем подпапку в которой будут храниться данные и настраиваем файл для записи
+        data_info_filename = f"data_info_{self.timestamp}.txt"
+        data_path = str(self.project_root) + "/data/processed/"
+        data_info_filepath = os.path.join(data_path, data_info_filename)
 
-        logging.info("\nОписание качественных признаков датасета:\n" +
-                    self.data.describe(include='object').to_string())
+        self.logger.info("Запись данных в .txt")
+        # Открываем файл для записи
+        with open(data_info_filepath, 'w', encoding='utf-8') as info_file:
+            # Записываем первые данные в файл
+            info_file.write(str(self.data.head(10)) + '\n\n')
+            info_file.write(str(self.data.dtypes) + '\n\n')
 
-        logging.info("\nУникальные значения типа object\n")
-        for col in self.data.select_dtypes(include='object').columns:
-            logging.info(f"Столбец: {col}   {self.data[col].unique()}")
+            info_file.write("Описание качественных признаков датасета:\n")
+            info_file.write(str(self.data.describe(include='object')) + '\n\n')
 
-        logging.info("\nОписание количественных признаков датасета:\n" +
-                    self.data.describe(include=['int64', 'float64']).to_string())
+            info_file.write("Уникальные значения типа object:\n")
+            for col in self.data.select_dtypes(include='object').columns:
+                info_file.write(f"Столбец: {col}  {self.data[col].unique()}\n")
 
-        # Проверка нужно ли проводить очистку
-        logging.info("\nРазмеры датасета: " + str(self.data.shape))
-        logging.info("Количество дубликатов: " + str(self.data.duplicated().sum()))
-        logging.info("Количество пропущенных значений:\n" +
-                    str(self.data.isnull().sum()))
+            info_file.write("\nОписание количественных признаков датасета:\n")
+            info_file.write(str(self.data.describe(include=['int64', 'float64'])) + '\n\n')
 
+            # Проверка на очистку данных
+            info_file.write("Размеры датасета: " + str(self.data.shape) + '\n')
+            info_file.write("Количество дубликатов: " + str((self.data.duplicated()).sum()) + '\n')
+            info_file.write("Количество пропущенных значений:\n" + str((self.data.isnull()).sum()) + '\n')
+
+        self.logger.info("Данные записаны")
 
         # Можете добавить ещё что-либо на своё усмотрение или в зависимости от данных
 
     def generate_graphs(self):
         
+        self.logger.info("Начало работы firstlook_analysis.generate_graphs")
+
         cols = self.data.columns
 
         # Если хотите использовать только количественные признаки, то удалите комментарий
@@ -66,8 +71,9 @@ class DataProcessor:
         # numerical_cols = self.data.drop(columns=['FastingBS', 'HeartDisease'], inplace=False) \
         #     .select_dtypes(include=['int64', 'float64']).columns
         
+        self.logger.info("Организация хранения графиков")
         # Создаем подпапку в которой будут храниться графики
-        figures_path = os.path.join(str(project_root), "data", "figures", self.timestamp)
+        figures_path = os.path.join(str(self.project_root), "data", "figures", self.timestamp)
         os.makedirs(figures_path)
 
         # Поддерживаемые типы графиков
@@ -77,12 +83,14 @@ class DataProcessor:
         }
 
         # Чтобы heatmap работала корректно
-        corr = label_encoder(self.data)
+        corr = encoding_data.label_encoder(self.data)
 
+        self.logger.info("Начало создания графиков")
         for plot_type in self.plot_types:
             # Проверим поддерживается ли текущий тип графика 
             if plot_type not in plot_functions and plot_type != 'heatmap':
                 print(f"Тип графика {plot_type} не поддерживается.")
+                self.logger.warning(f"Тип графика {plot_type} не поддерживается.")
                 continue
 
             if plot_type == 'heatmap':
@@ -109,11 +117,4 @@ class DataProcessor:
             plt.savefig(os.path.join(figures_path, filename))
             plt.close()
 
-
-# Инициализация и запуск
-data_file = str(project_root) + "/data/raw/heart.csv"
-
-# Создаем объект и запускаем обработку данных
-processor = DataProcessor(data_file)
-processor.check_data()
-processor.generate_graphs()
+        self.logger.info("Графики сохранены")

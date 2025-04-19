@@ -1,34 +1,45 @@
 import os
 import sys
+import logging
 from pathlib import Path
 
+# Чтобы Python искал модули и в src
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 from utils.paths import project_root
 
-# Устанавливаем переменную окружения для Kaggle API используя абсолютный путь
-kaggle_config_path = str(project_root) + '/config'
-os.environ['KAGGLE_CONFIG_DIR'] = kaggle_config_path
+def installer():
 
-from kaggle.api.kaggle_api_extended import KaggleApi
+    logger = logging.getLogger(__name__)
 
-# Проверяем путь до файла
-print(os.environ.get('KAGGLE_CONFIG_DIR'))
+    logger.info("Установка переменной окружения")
+    # Устанавливаем переменную окружения для Kaggle API используя абсолютный путь
+    kaggle_config_path = str(project_root) + '/config'
+    os.environ['KAGGLE_CONFIG_DIR'] = kaggle_config_path
 
-# Убедимся, что файл существует
-config_path = os.environ.get('KAGGLE_CONFIG_DIR', '')
-if not os.path.exists(os.path.join(config_path, 'kaggle.json')):
-    raise FileNotFoundError("Файл kaggle.json не найден в указанном пути.")
+    from kaggle.api.kaggle_api_extended import KaggleApi
 
-# Создаем объект API
-api = KaggleApi()
-api.authenticate()  # Аутентификация через kaggle.json
+    # Проверяем путь до файла
+    logger.info(f"Провекрка пути: {os.environ.get('KAGGLE_CONFIG_DIR')}")
 
-# Задаем параметры для скачивания данных
-dataset = 'fedesoriano/heart-failure-prediction'
-download_path = project_root / 'data' / 'raw'
+    logger.info("Проверка наличия API-ключа пользователя")
+    # Убедимся, что файл существует
+    config_path = os.environ.get('KAGGLE_CONFIG_DIR', '')
+    if not os.path.exists(os.path.join(config_path, 'kaggle.json')):
+        logger.critical("API-ключ не найден")
+        raise FileNotFoundError("Файл kaggle.json не найден в указанном пути.")
 
-# Скачиваем датасет
-api.dataset_download_files(dataset, path=download_path, unzip=True)
+    logger.info("Создание объекта API")
+    # Создаем объект API
+    api = KaggleApi()
+    api.authenticate()  # Аутентификация через kaggle.json
 
-print(f"Dataset {dataset} has been downloaded to {download_path}")
+    # Задаем параметры для скачивания данных
+    dataset = 'fedesoriano/heart-failure-prediction'
+    download_path = project_root / 'data' / 'raw'
+
+    logger.info("Скачивание датасета")
+    # Скачиваем датасет
+    api.dataset_download_files(dataset, path=download_path, unzip=True)
+
+    logger.info(f"Датасет {dataset} успешно установлен в {download_path}")

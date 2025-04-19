@@ -1,0 +1,20 @@
+2025-04-19 19:23:39,447 - __main__ - INFO - Начало работы
+2025-04-19 19:23:39,447 - __main__ - INFO - Датасета не существует. Скачивание датасета с Kaggle
+2025-04-19 19:23:39,448 - src.pipeline.download_data - INFO - Установка переменной окружения
+2025-04-19 19:23:40,528 - src.pipeline.download_data - INFO - Провекрка пути: E:\prod_framework_ml/config
+2025-04-19 19:23:40,528 - src.pipeline.download_data - INFO - Проверка наличия API-ключа пользователя
+2025-04-19 19:23:40,529 - src.pipeline.download_data - INFO - Создание объекта API
+2025-04-19 19:23:40,530 - src.pipeline.download_data - INFO - Скачивание датасета
+2025-04-19 19:23:41,102 - src.pipeline.download_data - INFO - Датасет fedesoriano/heart-failure-prediction успешно установлен в E:\prod_framework_ml\data\raw
+2025-04-19 19:23:41,104 - __main__ - INFO - Запущен первичный осмотр данных
+2025-04-19 19:23:41,177 - src.pipeline.firstlook_analysis - INFO - Начало работы firstlook_analysis.check_data
+2025-04-19 19:23:41,178 - src.pipeline.firstlook_analysis - INFO - Организация хранения данных о датасете
+2025-04-19 19:23:41,178 - src.pipeline.firstlook_analysis - INFO - Запись данных в .txt
+2025-04-19 19:23:41,344 - src.pipeline.firstlook_analysis - INFO - Данные записаны
+2025-04-19 19:23:41,356 - src.pipeline.firstlook_analysis - INFO - Начало работы firstlook_analysis.generate_graphs
+2025-04-19 19:23:41,382 - src.pipeline.firstlook_analysis - INFO - Организация хранения графиков
+2025-04-19 19:23:41,385 - src.pipeline.encoding_data - INFO - Начало работы энкодера типа Label Encoding
+2025-04-19 19:23:41,393 - src.pipeline.encoding_data - INFO - Данные закодированы
+2025-04-19 19:23:41,393 - src.pipeline.firstlook_analysis - INFO - Начало создания графиков
+2025-04-19 19:23:46,493 - src.pipeline.firstlook_analysis - INFO - Графики сохранены
+2025-04-19 19:23:46,493 - __main__ - INFO - Конец работы
