@@ -7,10 +7,10 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
 from pathlib import Path
-from . import encoding_data
+from . import feature_engineering
 
 # Получение корня проекта
-#sys.path.append(str(Path(__file__).resolve().parents[1]))
+# sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 # Класс для обработки данных
 class DataChecker:
@@ -83,7 +83,7 @@ class DataChecker:
         }
 
         # Чтобы heatmap работала корректно
-        corr = encoding_data.label_encoder(self.data)
+        corr = feature_engineering.label_encoder(self.data).corr()
 
         self.logger.info("Начало создания графиков")
         for plot_type in self.plot_types:
