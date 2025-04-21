@@ -1,14 +1,14 @@
 import os
 import logging
-from pipeline import paths
 
-def installer():
+def installer(project_root):
 
     logger = logging.getLogger(__name__)
 
     logger.info("Установка переменной окружения")
     # Устанавливаем переменную окружения для Kaggle API используя абсолютный путь
-    kaggle_config_path = str(paths.project_root) + '/config'
+    
+    kaggle_config_path = str(project_root) + '/config'
     os.environ['KAGGLE_CONFIG_DIR'] = kaggle_config_path
 
     from kaggle.api.kaggle_api_extended import KaggleApi
@@ -30,7 +30,7 @@ def installer():
 
     # Задаем параметры для скачивания данных
     dataset = 'fedesoriano/heart-failure-prediction'
-    download_path = paths.project_root / 'data' / 'raw'
+    download_path = project_root + '/data/raw'
 
     logger.info("Скачивание датасета")
     # Скачиваем датасет

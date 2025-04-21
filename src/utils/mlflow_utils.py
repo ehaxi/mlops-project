@@ -1,12 +1,11 @@
-import os
 import mlflow
 import mlflow.sklearn
 import mlflow.catboost
 import mlflow.xgboost
-from pipeline import paths
 
+# Указываем URI сервера, запущенного через start_mlflow_server.py
+mlflow.set_tracking_uri("http://127.0.0.1:5000")
 
-mlflow.set_tracking_uri("file://" + str(paths.project_root) + "/mlflow_logs/")
 
 def start_mlflow_run(experiment_name: str = "Default"):
     mlflow.set_experiment(experiment_name)
@@ -40,5 +39,7 @@ def log_model(model, model_name: str = "model"):
 def log_artifact(path_to_file: str):
     mlflow.log_artifact(path_to_file)
 
+
 def load_model():
+    # Заглушка, можешь реализовать позже
     pass

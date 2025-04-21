@@ -2,24 +2,20 @@ import abc
 import yaml
 import pandas as pd
 import numpy as np
+from src.utils import paths
 
 class BaseModel(abc.ABC):
-    def __init__(self, df: pd.DataFrame, path: str, splits: list, config=None):
+    def __init__(self, df: pd.DataFrame, splits: list, config=None):
         
         self.df = df
-        self.path = path
 
         self.splits = splits
 
         if config is None:
-            with open('.config/models_configs.yaml', 'r') as file:
+            with open(str(paths.project_root) + '/config/models_configs.yaml', 'r') as file:
                 self.config = yaml.safe_load(file)
         else:
             self.config = config
-
-    @abc.abstractmethod
-    def cross_validation(self, splits):
-        pass
 
     @abc.abstractmethod
     def fit(self, x_train, y_train):

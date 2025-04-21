@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/841543325752853973/d009400e8fb54e42bc1f6d709e9d8aa4/artifacts
+end_time: 1745238672140
+entry_point_name: ''
+experiment_id: '841543325752853973'
+lifecycle_stage: active
+run_id: d009400e8fb54e42bc1f6d709e9d8aa4
+run_name: unique-slug-410
+run_uuid: d009400e8fb54e42bc1f6d709e9d8aa4
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1745238671974
+status: 4
+tags: []
+user_id: niktu

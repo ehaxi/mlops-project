@@ -7,7 +7,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
 from pathlib import Path
-from pipeline import features_engineering_bib
+from src.data_processing import features_engineering_bib
 
 # Получение корня проекта
 # sys.path.append(str(Path(__file__).resolve().parents[1]))

@@ -1,6 +1,6 @@
 import logging
 import pandas as pd
-from pipeline import features_engineering_bib
+from src.data_processing import features_engineering_bib
 
 def preprocessing(data_file: str):
     logger = logging.getLogger(__name__)
@@ -24,7 +24,7 @@ def preprocessing(data_file: str):
             raise exception
 
     try:
-        x_train, x_test, y_train, y_test = features_engineering_bib.data_separation(df)
+        splits = features_engineering_bib.data_separation(df)
         logger.info("Разделение данных завершено")
     except Exception as exception:
         logger.error(f"Ошибка при разделении данных: {exception}")
@@ -32,4 +32,4 @@ def preprocessing(data_file: str):
     
     logger.info("Обработка завершена")
 
-    return df, x_train, x_test, y_train, y_test
+    return df, splits

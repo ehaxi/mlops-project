@@ -1,49 +1,56 @@
-# src/pipeline/__init__.py
+# # src/pipeline/__init__.py
 
-# analysis 
-from src.analysis import firstlook_analysis
+# # analysis 
+# from src.analysis import firstlook_analysis
 
-# api
-from src.api import api, schemas
+# # api
+# #from src.api import api, schemas
 
-# data_processing
-from src.data_processing import (
-    data_preprocessing, 
-    download_data, 
-    features_engineering_bib
-)
+# # data_processing
+# from src.data_processing import (
+#     data_preprocessing, 
+#     download_data, 
+#     features_engineering_bib
+# )
 
-# models 
-from src.models import (
-    base_model,
-    catboost_clf,
-    skl_logreg_clf,
-    skl_randforest_clf,
-    xgboost_clf
-)
+# # models 
+# from src.models import (
+#     base_model,
+#     catboost_clf,
+#     skl_logreg_clf,
+#     skl_randforest_clf,
+#     xgboost_clf
+# )
 
-# utils
-from src.utils import (
-    io,
-    set_logger,
-    mlflow_utils,
-    paths
-)
+# # pipeline
+# from src.pipeline import train
 
-__all__ = [
-    # analysis
-    "firstlook_analysis",
+# # utils
+# from src.utils import (
+#     #io,
+#     set_logger,
+#     mlflow_utils,
+#     paths
+# )
 
-    # api
-    "api", "schemas",
+# __all__ = [
+#     # analysis
+#     "firstlook_analysis",
 
-    # data_processing
-    "data_preprocessing", "download_data", "features_engineering_bib",
+#     # api
+#     #"api", "schemas",
 
-    # models
-    "base_model", "catboost_clf", "skl_logreg_clf",
-    "skl_randforest_clf", "xgboost_clf",
+#     # data_processing
+#     "data_preprocessing", "download_data", "features_engineering_bib",
 
-    # utils
-    "io", "logger", "mlflow_utils", "paths", "set_logger"
-]
+#     # models
+#     "base_model", "catboost_clf", "skl_logreg_clf",
+#     "skl_randforest_clf", "xgboost_clf",
+
+#     # pipeline
+#     "train",
+
+#     # utils
+#     #"io",
+#     "logger", "mlflow_utils", "paths", "set_logger"
+# ]

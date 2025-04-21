@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/841543325752853973
+creation_time: 1745238671511
+experiment_id: '841543325752853973'
+last_update_time: 1745238671511
+lifecycle_stage: active
+name: CatBoost Experiment

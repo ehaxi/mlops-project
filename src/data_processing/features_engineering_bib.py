@@ -24,7 +24,7 @@ def normalization(df: pd.DataFrame):
 
     scaler = MinMaxScaler()
 
-    df['Oldpeak'] = scaler.fit_transform(df['Oldpeak'])
+    df['Oldpeak'] = scaler.fit_transform(df[['Oldpeak']])
 
     logger.info("Данные нормализованы")
 
@@ -38,9 +38,9 @@ def standartization(df: pd.DataFrame):
 
     scaler = StandardScaler()
 
-    df['Age'] = scaler.fit_transform(df['Age'])
-    df['Cholesterol'] = scaler.fit_transform(df['Cholesterol'])
-    df['MaxHR'] = scaler.fit_transform(df['MaxHR'])
+    df['Age'] = scaler.fit_transform(df[['Age']])
+    df['Cholesterol'] = scaler.fit_transform(df[['Cholesterol']])
+    df['MaxHR'] = scaler.fit_transform(df[['MaxHR']])
 
     logger.info("Данные стандартизованны")
 
