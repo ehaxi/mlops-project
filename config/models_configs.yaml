@@ -1,0 +1,37 @@
+version: 1
+
+models:
+
+  catboost_clf:
+    iterations: 500
+    learning_rate: 0.03
+    depth: 6
+    loss_function: Logloss
+    verbose: False
+    random_seed: 42
+    eval_metric: Accuracy
+
+  skl_logreg_clf:
+    penalty: l2
+    C: 1.0
+    solver: lbfgs
+    max_iter: 1000
+    random_state: 42
+
+  skl_randforest_clf:
+    n_estimators: 200
+    max_depth: 10
+    min_samples_split: 4
+    min_samples_leaf: 2
+    random_state: 42
+    criterion: gini
+
+  xgboost_clf:
+    n_estimators: 300
+    learning_rate: 0.1
+    max_depth: 5
+    subsample: 0.8
+    colsample_bytree: 0.8
+    objective: binary:logistic
+    eval_metric: logloss
+    random_state: 42

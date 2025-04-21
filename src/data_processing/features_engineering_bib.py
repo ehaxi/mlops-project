@@ -2,7 +2,7 @@ import logging
 import pandas as pd
 import numpy as np
 from sklearn.preprocessing import LabelEncoder, MinMaxScaler, StandardScaler
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import StratifiedKFold
 
 logger = logging.getLogger(__name__)
 
@@ -47,15 +47,22 @@ def standartization(df: pd.DataFrame):
     return df
 
 
-def data_separation(df: pd.DataFrame):
+def data_separation(df: pd.DataFrame, n_splits: int = 5):
     # Нужно вручную настроить features и target 
     # Признаки RestingBP, RestingECG удаляются из-за слишком маленькой корреляции с таргетом
     logger.info("Начало разделения данных на тренировочную и тестовую выборки")
 
-    features = df[df.columns.drop(['HeartDisease','RestingBP','RestingECG'])].to_numpy()
-    target = df['HeartDisease'].to_list()
-    x_train, x_test, y_train, y_test = train_test_split(features, target, test_size = 0.20, random_state = 2)
+    features = df[df.columns.drop(['HeartDisease','RestingBP','RestingECG'])]
+    target = df['HeartDisease']
+
+    skf = StratifiedKFold(n_splits=n_splits, shuffle=True, random_state=42)
+    splits = []
+
+    for train_index, test_index in skf.split(features, target):
+        X_train, X_test = features.iloc[train_index].to_numpy(), features.iloc[test_index].to_numpy()
+        y_train, y_test = target.iloc[train_index].to_list(), target.iloc[test_index].to_list()
+        splits.append((X_train, X_test, y_train, y_test))
 
     logger.info("Данные разделены")
 
-    return x_train, x_test, y_train, y_test
+    return splits
