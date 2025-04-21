@@ -7,13 +7,13 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from datetime import datetime
 from pathlib import Path
-from . import feature_engineering
+from pipeline import features_engineering_bib
 
 # Получение корня проекта
 # sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 # Класс для обработки данных
-class DataChecker:
+class DataChecker():
     def __init__(self, data_file: str, project_root: Path, plot_types=['histogram', 'boxplot', 'heatmap']):
 
         self.data_file = data_file
@@ -83,7 +83,7 @@ class DataChecker:
         }
 
         # Чтобы heatmap работала корректно
-        corr = feature_engineering.label_encoder(self.data).corr()
+        corr = features_engineering_bib.label_encoder(self.data).corr()
 
         self.logger.info("Начало создания графиков")
         for plot_type in self.plot_types:

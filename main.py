@@ -1,27 +1,19 @@
 import os
 import logging
-from datetime import datetime
 
-from src.utils.paths import project_root
-from src.pipeline.firstlook_analysis import DataChecker
-from src.pipeline import download_data
+from src.pipeline import (
+    paths,
+    firstlook_analysis,
+    download_data,
+    set_logger,
+    data_preprocessing
+)
 
-def setup_logging():
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-    log_filename = f"logs/log_{timestamp}.log"
-
-    logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-        handlers=[
-            logging.FileHandler(log_filename, mode='a', encoding='utf-8'),
-            logging.StreamHandler()
-        ]
-    )
 
 if __name__ == '__main__':
+    
     os.makedirs('logs', exist_ok=True)
-    setup_logging()
+    set_logger.setup_logging()
 
     logger = logging.getLogger(__name__)
     logger.info("Начало работы")
@@ -35,11 +27,14 @@ if __name__ == '__main__':
     else:
         logger.info("Датасет найден")
 
-    data_file = str(project_root) + "/data/raw/heart.csv"
+    data_file = str(paths.project_root) + "/data/raw/heart.csv"
 
     logger.info("Запущен первичный осмотр данных")
-    checker = DataChecker(data_file, project_root)
+    checker = firstlook_analysis.DataChecker(data_file, paths.project_root)
     checker.check_data()
     checker.generate_graphs()
+
+    logger.info("Запущен препроцессер данных")
+    data_preprocessing.preprocessing(data_file) 
 
     logger.info("Конец работы")

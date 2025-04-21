@@ -1,13 +1,34 @@
-import sys
-import logging
+import abc
 import pandas as pd
-from datetime import datetime
-from pathlib import Path
+import numpy as np
 
-sys.path.append(str(Path(__file__).resolve().parents[2]))
-from pipeline import feature_engineering_bib
-from utils.paths import project_root
+class BaseModel(abc.ABC):
+    def __init__(self, df: pd.DataFrame, path: str, 
+                 x_train: np.ndarray, x_test: np.ndarray,
+                 y_train: list, y_test: list):
+        
+        self.df = df
+        self.path = path
 
-data_file = str(project_root) + "/data/raw/heart.csv"
-data = pd.read_csv(data_file, encoding='utf-8')
-df = feature_engineering_bib.label_encoder(data)
+        self.x_train = x_train
+        self.x_test = x_test
+        self.y_train = y_train
+        self.y_test = y_test
+
+    @abc.abstractmethod
+    def fit(self, x_train, y_train):
+        pass
+
+    @abc.abstractmethod
+    def predict(self, x_test):
+        pass
+
+    @abc.abstractmethod
+    def evaluate(self, x_test, y_test):
+        pass
+
+    def save_model(self, path):
+        pass
+
+    def load_model(self, path):
+        pass
