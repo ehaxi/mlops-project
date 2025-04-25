@@ -15,11 +15,11 @@ class CatBoostClf(BaseModel):
 
         self.model = CatBoostClassifier(**params)
 
-        timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
-        self.model_name = f"{self.model.__class__.__name__}_{timestamp}"
+        self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+        self.model_name = f"{self.model.__class__.__name__}_{self.timestamp}"
 
     def fit(self):
-        with mlflow_utils.start_mlflow_run("CatBoost Experiment"):
+        with mlflow_utils.start_mlflow_run(str(f"CatBoostClf_{self.timestamp}")):
             mlflow_utils.log_params(self.config['models']['catboost_clf'])
 
             for x_train, x_test, y_train, y_test in self.splits:
@@ -48,14 +48,9 @@ class CatBoostClf(BaseModel):
         mlflow_utils.log_metrics(flat_metrics)
 
     def save_model(self):
-        output_path_bydump = str(paths.project_root) + f'/trained_models/by_dump/{self.model_name}.pkl'
+        output_path_bydump = str(paths.project_root) + f'/trained_models/{self.model_name}.pkl'
+
         dump(self.model, output_path_bydump)
-
-        # output_path_bybib = str(paths.project_root) + f'/trained_models/by_modelbib/{self.model_name}.cbm'
-        # self.model.save_model(output_path_bybib)
-
-        # output_path_bymlflow = str(paths.project_root) + f'/trained_models/by_mlflow/{self.model_name}.cbm'
-        # mlflow_utils.log_artifact(output_path_bymlflow)
 
     def load_model(self):
         pass

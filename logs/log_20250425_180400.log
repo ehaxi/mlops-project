@@ -1,0 +1,17 @@
+2025-04-25 18:04:00,084 - __main__ - INFO - Начало работы
+2025-04-25 18:04:00,092 - __main__ - INFO - MLflow server is already running.
+2025-04-25 18:04:00,093 - __main__ - INFO - Датасет найден
+2025-04-25 18:04:00,093 - __main__ - INFO - Запущен первичный осмотр данных
+2025-04-25 18:04:00,114 - src.analysis.firstlook_analysis - INFO - Начало работы firstlook_analysis.check_data
+2025-04-25 18:04:00,115 - src.analysis.firstlook_analysis - INFO - Организация хранения данных о датасете
+2025-04-25 18:04:00,115 - src.analysis.firstlook_analysis - INFO - Запись данных в .txt
+2025-04-25 18:04:00,225 - src.analysis.firstlook_analysis - INFO - Данные записаны
+2025-04-25 18:04:00,226 - src.analysis.firstlook_analysis - INFO - Начало работы firstlook_analysis.generate_graphs
+2025-04-25 18:04:00,226 - src.analysis.firstlook_analysis - INFO - Организация хранения графиков
+2025-04-25 18:04:00,236 - src.analysis.firstlook_analysis - INFO - Начало создания графиков
+2025-04-25 18:04:04,678 - src.analysis.firstlook_analysis - INFO - Графики сохранены
+2025-04-25 18:04:04,679 - __main__ - INFO - Запущен pipeline обучения
+2025-04-25 18:04:04,680 - src.data_processing.data_preprocessing - INFO - Начало подготовки к обучению
+2025-04-25 18:04:04,689 - src.data_processing.data_preprocessing - INFO - Начало обработки данных
+2025-04-25 18:04:04,767 - src.data_processing.data_preprocessing - INFO - Разделение данных завершено
+2025-04-25 18:04:04,768 - src.data_processing.data_preprocessing - INFO - Обработка завершена

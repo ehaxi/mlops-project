@@ -1,20 +1,23 @@
 import os
 import subprocess
 import platform
+import logging
+from pathlib import Path
+from src.utils.paths import project_root
+from src.utils import set_logger 
 
-# Путь к корню проекта
-project_root = os.path.dirname(os.path.abspath(__file__))
+logger = logging.getLogger(__name__)
 
 # Пути к хранилищам
-backend_store_uri = os.path.join(project_root, "mlflow.db")
-artifact_root = os.path.join(project_root, "logs", "mlflow_logs")
+backend_store_uri = Path(project_root) / "mlflow_server/data_local"
+artifact_root = Path(project_root) / "mlflow_server/artifacts"
 
 # Убедимся, что папка для артефактов существует
 os.makedirs(artifact_root, exist_ok=True)
 
 # Формируем URI для запуска
 backend_store_uri_str = f"sqlite:///{backend_store_uri}"
-artifact_root_uri_str = f"file:///{artifact_root.replace(os.sep, '/')}"  # Для Windows слэши
+artifact_root_uri_str = f"file:///{artifact_root}"  
 host = "127.0.0.1"
 port = "5000"
 
@@ -28,11 +31,11 @@ cmd = [
 ]
 
 # Приведение к строке (особенно важно для Windows)
-command_str = " ".join(cmd) if platform.system() != "Windows" else " ".join(cmd)
+command_str = " ".join(cmd)
 
-# print("🔧 Запуск MLflow Tracking Server:")
-# print(f"📁 Backend URI: {backend_store_uri_str}")
-# print(f"📁 Artifact Root: {artifact_root_uri_str}")
-# print(f"🌐 URL: http://{host}:{port}\n")
+logger.info("Запуск MLflow Tracking Server:")
+logger.info(f"Backend URI: {backend_store_uri_str}")
+logger.info(f"Artifact Root: {artifact_root_uri_str}")
+logger.info(f"URL: http://{host}:{port}\n")
 
-subprocess.run(command_str, shell=True)
+subprocess.run(command_str, shell=False)

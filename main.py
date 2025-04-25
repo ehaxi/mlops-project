@@ -14,17 +14,17 @@ def start_mlflow_server():
         # Проверка: уже работает ли сервер
         response = requests.get("http://127.0.0.1:5000")
         if response.status_code == 200:
-            print("[INFO] MLflow server is already running.")
+            logger.info("MLflow server is already running.")
             return
     except requests.exceptions.ConnectionError:
-        print("[INFO] MLflow server is not running. Starting now...")
+        logger.info("MLflow server is not running. Starting now...")
 
     # Запуск сервера в фоне
     subprocess.Popen(
         [
             "mlflow", "server",
-            "--backend-store-uri", "file://logs/mlflow_logs",
-            "--default-artifact-root", "file://logs/mlflow_logs",
+            "--backend-store-uri", f"file:///{project_root}/mlflow_server/data_local",
+            "--default-artifact-root", f"file:///{project_root}/mlflow_server/artifacts",
             "--host", "127.0.0.1",
             "--port", "5000"
         ],
@@ -40,8 +40,6 @@ def start_mlflow_server():
 if __name__ == '__main__':
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "src")))
 
-    pid = start_mlflow_server()
-
     project_root = str(paths.project_root)
     
     os.makedirs('logs', exist_ok=True)
@@ -49,6 +47,8 @@ if __name__ == '__main__':
 
     logger = logging.getLogger(__name__)
     logger.info("Начало работы")
+
+    pid = start_mlflow_server()
 
     # При необходимости замените имя файла!
     file_path = "data/raw/heart.csv"

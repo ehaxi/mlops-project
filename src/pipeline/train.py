@@ -1,4 +1,6 @@
 import logging
+import shutil
+from pathlib import Path
 from src.data_processing import data_preprocessing
 from src.models import (
     catboost_clf
@@ -6,6 +8,7 @@ from src.models import (
     # skl_randforest_clf,
     # xgboost_clf
 )
+from src.utils import paths
 
 def train(data_file):
     df, splits = data_preprocessing.preprocessing(data_file)
