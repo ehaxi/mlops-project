@@ -1,14 +1,18 @@
 import mlflow
-import mlflow.sklearn
 import mlflow.catboost
-import mlflow.xgboost
-from src.utils import paths
-
-# Указываем URI сервера, запущенного через start_mlflow_server.py
-mlflow.set_tracking_uri("http://127.0.0.1:5000")
-mlflow.set_experiment("Heart_diseases_clf")
+from mlflow.tracking import MlflowClient
 
 def start_mlflow_run(run_name: str):
+    mlflow.set_tracking_uri("http://127.0.0.1:5000")
+
+    client = MlflowClient()
+
+    experiment = client.get_experiment_by_name(name="Heart_diseases_clf")
+    if experiment and experiment.lifecycle_stage == "deleted":
+        client.restore_experiment(experiment.experiment_id)
+
+    mlflow.set_experiment("Heart_diseases_clf")
+
     return mlflow.start_run(run_name=run_name)
 
 

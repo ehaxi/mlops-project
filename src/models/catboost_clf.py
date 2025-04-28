@@ -13,7 +13,7 @@ class CatBoostClf(BaseModel):
         params = self.config['models']['catboost_clf']
         self.splits = splits
 
-        self.model = CatBoostClassifier(**params)
+        self.model = CatBoostClassifier(**params, train_dir=None)
 
         self.timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         self.model_name = f"{self.model.__class__.__name__}_{self.timestamp}"

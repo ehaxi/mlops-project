@@ -1,0 +1,17 @@
+2025-04-28 03:07:37,397 - __main__ - INFO - Начало работы
+2025-04-28 03:07:37,398 - __main__ - INFO - Датасет найден
+2025-04-28 03:07:37,399 - __main__ - INFO - Запущен первичный осмотр данных
+2025-04-28 03:07:37,406 - src.analysis.firstlook_analysis - INFO - Начало работы firstlook_analysis.check_data
+2025-04-28 03:07:37,408 - src.analysis.firstlook_analysis - INFO - Организация хранения данных о датасете
+2025-04-28 03:07:37,409 - src.analysis.firstlook_analysis - INFO - Запись данных в .txt
+2025-04-28 03:07:37,500 - src.analysis.firstlook_analysis - INFO - Данные записаны
+2025-04-28 03:07:37,535 - src.analysis.firstlook_analysis - INFO - Начало работы firstlook_analysis.generate_graphs
+2025-04-28 03:07:37,536 - src.analysis.firstlook_analysis - INFO - Организация хранения графиков
+2025-04-28 03:07:37,542 - src.analysis.firstlook_analysis - INFO - Начало создания графиков
+2025-04-28 03:07:42,755 - src.analysis.firstlook_analysis - INFO - Графики сохранены
+2025-04-28 03:07:42,755 - __main__ - INFO - Запущен pipeline обучения
+2025-04-28 03:07:42,756 - src.data_processing.data_preprocessing - INFO - Начало подготовки к обучению
+2025-04-28 03:07:42,761 - src.data_processing.data_preprocessing - INFO - Начало обработки данных
+2025-04-28 03:07:42,817 - src.data_processing.data_preprocessing - INFO - Разделение данных завершено
+2025-04-28 03:07:42,818 - src.data_processing.data_preprocessing - INFO - Обработка завершена
+2025-04-28 03:08:00,623 - __main__ - INFO - Конец работы

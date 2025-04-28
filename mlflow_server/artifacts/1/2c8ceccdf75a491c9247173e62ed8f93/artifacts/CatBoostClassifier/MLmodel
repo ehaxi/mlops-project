@@ -14,8 +14,8 @@ flavors:
     loader_module: mlflow.catboost
     python_version: 3.13.3
 mlflow_version: 2.21.3
-model_size_bytes: 552816
-model_uuid: 017323e9e341497aadbb0e3da403c151
+model_size_bytes: 552808
+model_uuid: 0dde393b7d5a40249698e0b0f2781512
 prompts: null
-run_id: 6659c87a68f24ed99620f76027dfe36b
-utc_time_created: '2025-04-25 15:08:11.620679'
+run_id: 2c8ceccdf75a491c9247173e62ed8f93
+utc_time_created: '2025-04-28 00:07:51.429507'

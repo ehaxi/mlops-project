@@ -1,6 +1,3 @@
-import subprocess
-import time
-import requests
 import os
 import sys
 import logging
@@ -8,34 +5,6 @@ from src.analysis import firstlook_analysis
 from src.utils import paths, set_logger
 from src.data_processing import download_data
 from src.pipeline import train
-
-def start_mlflow_server():
-    try:
-        # Проверка: уже работает ли сервер
-        response = requests.get("http://127.0.0.1:5000")
-        if response.status_code == 200:
-            logger.info("MLflow server is already running.")
-            return
-    except requests.exceptions.ConnectionError:
-        logger.info("MLflow server is not running. Starting now...")
-
-    # Запуск сервера в фоне
-    subprocess.Popen(
-        [
-            "mlflow", "server",
-            "--backend-store-uri", f"file:///{project_root}/mlflow_server/data_local",
-            "--default-artifact-root", f"file:///{project_root}/mlflow_server/artifacts",
-            "--host", "127.0.0.1",
-            "--port", "5000"
-        ],
-        cwd=".",  # путь откуда запускать, "." = текущая папка
-        stdout=subprocess.DEVNULL,
-        stderr=subprocess.DEVNULL
-    )
-
-    # Дать серверу немного времени на запуск
-    time.sleep(5)
-    # print("[INFO] MLflow server started.")
 
 if __name__ == '__main__':
     sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "src")))
@@ -47,8 +16,6 @@ if __name__ == '__main__':
 
     logger = logging.getLogger(__name__)
     logger.info("Начало работы")
-
-    pid = start_mlflow_server()
 
     # При необходимости замените имя файла!
     file_path = "data/raw/heart.csv"
