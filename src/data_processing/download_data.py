@@ -8,7 +8,7 @@ def installer(project_root):
     logger.info("Установка переменной окружения")
     # Устанавливаем переменную окружения для Kaggle API используя абсолютный путь
     
-    kaggle_config_path = str(project_root) + '/config'
+    kaggle_config_path = str(project_root) + '/venv'
     os.environ['KAGGLE_CONFIG_DIR'] = kaggle_config_path
 
     from kaggle.api.kaggle_api_extended import KaggleApi

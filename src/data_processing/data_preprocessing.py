@@ -1,6 +1,6 @@
 import logging
 import pandas as pd
-from src.data_processing import features_engineering_bib
+from src.data_processing.features_engineering_bib import FeaturesEngineering
 
 def preprocessing(data_file: str):
     logger = logging.getLogger(__name__)
@@ -8,28 +8,19 @@ def preprocessing(data_file: str):
 
     df = pd.read_csv(data_file, encoding='utf-8')
 
+    fe = FeaturesEngineering(df)
+
     steps = [
-        features_engineering_bib.label_encoder,
-        features_engineering_bib.normalization,
-        features_engineering_bib.standartization
+        fe.label_encoder,
+        fe.normalization,
+        fe.standartization
     ]
 
     logger.info("Начало обработки данных")
-    
-    for step in steps:
-        try:
-            df = step(df)
-        except Exception as exception:
-            logger.error(f"Ошибка на этапе {step.__name__}: {exception}")
-            raise exception
 
-    try:
-        splits = features_engineering_bib.data_separation(df)
-        logger.info("Разделение данных завершено")
-    except Exception as exception:
-        logger.error(f"Ошибка при разделении данных: {exception}")
-        raise exception
+    for step in steps:
+        df = step()
     
     logger.info("Обработка завершена")
 
-    return df, splits
+    return df

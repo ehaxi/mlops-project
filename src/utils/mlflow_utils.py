@@ -37,8 +37,8 @@ def log_model(model):
     loggers[model_class_name](model, model_class_name)
 
 
-def log_artifact(file):
-    mlflow.log_artifact(file)
+def log_artifact(file, name: str):
+    mlflow.log_artifact(file, name)
 
 
 def load_model():

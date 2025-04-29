@@ -7,12 +7,10 @@ from src.data_processing import download_data
 from src.pipeline import train
 
 if __name__ == '__main__':
-    sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), "src")))
-
     project_root = str(paths.project_root)
     
     os.makedirs('logs', exist_ok=True)
-    set_logger.setup_logging(project_root)
+    set_logger.setup_logging(project_root, "main")
 
     logger = logging.getLogger(__name__)
     logger.info("Начало работы")
@@ -28,10 +26,14 @@ if __name__ == '__main__':
 
     data_file = project_root + "/data/raw/heart.csv"
 
-    logger.info("Запущен первичный осмотр данных")
-    checker = firstlook_analysis.DataChecker(data_file, project_root)
-    checker.check_data()
-    checker.generate_graphs()
+    print("Нужен ли первичный осмотр данных?[Y/n]")
+    flag = input()
+
+    if flag == 'Y':
+        logger.info("Запущен первичный осмотр данных")
+        checker = firstlook_analysis.DataChecker(data_file, project_root)
+        checker.check_data()
+        checker.generate_graphs()
 
     logger.info("Запущен pipeline обучения")
     train.train(data_file)

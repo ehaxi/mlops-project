@@ -49,11 +49,12 @@ import logging
 from pathlib import Path
 from src.utils.paths import project_root
 from src.utils import set_logger 
-
+    
+os.makedirs('logs', exist_ok=True)
+set_logger.setup_logging(str(project_root), "server")
 logger = logging.getLogger(__name__)
 
 def graceful_shutdown(signum, frame):
-    """Функция для корректного завершения работы сервера"""
     logger.info("Получен сигнал завершения. Остановка MLflow сервера...")
     sys.exit(0)
 
