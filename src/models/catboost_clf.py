@@ -6,7 +6,7 @@ import shutil
 import optuna
 from optuna.samplers import NSGAIISampler
 from catboost import CatBoostClassifier
-from sklearn.model_selection import StratifiedKFold
+from sklearn.model_selection import StratifiedKFold, train_test_split
 from sklearn.metrics import (
     recall_score,
     f1_score,
@@ -33,7 +33,7 @@ class CatBoostClf(BaseModel):
         self.model_name = f"CatBoostClf_{self.timestamp}"
         self.weights = [0.7, 0.2, 0.1]
 
-    def optimize(self, n_trials=300):
+    def optimize(self, n_trials=3000):
         def log_trial(study, trial):
             """Callback для логирования прогресса оптимизации"""
             trial_time = time.time() - trial.datetime_start.timestamp()
@@ -60,58 +60,69 @@ class CatBoostClf(BaseModel):
             start_time = time.time()
 
             params = {
-                'iterations': trial.suggest_int('iterations', 100, 1000),
-                'depth': trial.suggest_int('depth', 3, 10),
-                'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.3, log=True),
+                'iterations': trial.suggest_int('iterations', 500, 1000),
+                'depth': trial.suggest_int('depth', 3, 7),
+                'learning_rate': trial.suggest_float('learning_rate', 0.01, 0.1, log=True),
                 'l2_leaf_reg': trial.suggest_float('l2_leaf_reg', 1e-3, 10.0, log=True),
-                'border_count': trial.suggest_int('border_count', 32, 255),
-                'bagging_temperature': trial.suggest_float('bagging_temperature', 0.0, 10.0),
+                'border_count': trial.suggest_int('border_count', 32, 128),
+                'bagging_temperature': trial.suggest_float('bagging_temperature', 0.0, 3.0),
                 'random_strength': trial.suggest_float('random_strength', 1e-9, 10.0, log=True),
                 'verbose': False,
                 'random_state': 42,
                 'auto_class_weights': 'Balanced',
             }
 
-            skf = StratifiedKFold(shuffle=True, random_state=42)
+            # skf = StratifiedKFold(shuffle=True, random_state=42)
 
             recall_scores, f1_scores, pr_auc_scores = [], [], []
 
             features = self.df[self.df.columns.drop(['HeartDisease','RestingBP','RestingECG'])]
             target = self.df['HeartDisease']
 
-            for fold, (train_index, test_index) in enumerate(skf.split(features, target), 1):
-                x_train, x_test = features.iloc[train_index].to_numpy(), features.iloc[test_index].to_numpy()
-                y_train, y_test = target.iloc[train_index].to_list(), target.iloc[test_index].to_list()
+            x_train, x_test, y_train, y_test = train_test_split(
+                features,
+                target,
+                test_size=0.2,
+                stratify=target,  # Сохраняем распределение классов
+                random_state=42
+            )
+
+            # Конвертируем в numpy arrays
+            x_train = x_train.to_numpy()
+            x_test = x_test.to_numpy()
+            y_train = y_train.to_list()
+            y_test = y_test.to_list()
                 
-                model = CatBoostClassifier(
-                    **params,
-                    train_dir=None,
-                    allow_writing_files=False,
-                    early_stopping_rounds=20
-                )
-                model.fit(
-                    x_train, y_train,
-                    eval_set=(x_test, y_test),
-                    early_stopping_rounds=50,
-                    verbose=False
-                )
+            model = CatBoostClassifier(
+                **params,
+                train_dir=None,
+                allow_writing_files=False,
+                early_stopping_rounds=20
+            )
 
-                y_pred = model.predict(x_test)
-                y_proba = model.predict_proba(x_test)
+            model.fit(
+                x_train, y_train,
+                eval_set=(x_test, y_test),
+                early_stopping_rounds=50,
+                verbose=False
+            )
 
-                recall = recall_score(y_test, y_pred)
-                f1 = f1_score(y_test, y_pred)
-                precision, recall_pr, _ = precision_recall_curve(y_test, y_proba[:, 1])
-                pr_auc = auc(recall_pr, precision)
-                
-                recall_scores.append(recall)
-                f1_scores.append(f1)
-                pr_auc_scores.append(pr_auc)
+            y_pred = model.predict(x_test)
+            y_proba = model.predict_proba(x_test)
 
-                self.logger.debug(
-                    f"Trial {trial.number} | Fold {fold} | "
-                    f"Recall: {recall:.4f} | F1: {f1:.4f} | PR-AUC: {pr_auc:.4f}"
-                )
+            recall = recall_score(y_test, y_pred)
+            f1 = f1_score(y_test, y_pred)
+            precision, recall_pr, _ = precision_recall_curve(y_test, y_proba[:, 1])
+            pr_auc = auc(recall_pr, precision)
+            
+            recall_scores.append(recall)
+            f1_scores.append(f1)
+            pr_auc_scores.append(pr_auc)
+
+            self.logger.debug(
+                f"Trial {trial.number} | Fold  | "
+                f"Recall: {recall:.4f} | F1: {f1:.4f} | PR-AUC: {pr_auc:.4f}"
+            )
 
             trial.set_user_attr("execution_time", time.time() - start_time)
 
@@ -174,23 +185,45 @@ class CatBoostClf(BaseModel):
             features = self.df[self.df.columns.drop(['HeartDisease','RestingBP','RestingECG'])]
             target = self.df['HeartDisease']
 
-            skf = StratifiedKFold(shuffle=True, random_state=42)
+            # skf = StratifiedKFold(shuffle=True, random_state=42)
 
             recall_scores, f1_scores, pr_auc_scores = [], [], []
 
-            for train_index, test_index in skf.split(features, target):
-                x_train, x_test = features.iloc[train_index].to_numpy(), features.iloc[test_index].to_numpy()
-                y_train, y_test = target.iloc[train_index].to_list(), target.iloc[test_index].to_list()
+            x_train, x_test, y_train, y_test = train_test_split(
+                features,
+                target,
+                test_size=0.2,
+                stratify=target,  # Сохраняем распределение классов
+                random_state=42
+            )
 
-                self.model.fit(x_train, y_train)
+            # Конвертируем в numpy arrays
+            x_train = x_train.to_numpy()
+            x_test = x_test.to_numpy()
+            y_train = y_train.to_list()
+            y_test = y_test.to_list()
+                
+            self.model = CatBoostClassifier(
+                **self.best_params,
+                train_dir=None,
+                allow_writing_files=False,
+                early_stopping_rounds=20
+            )
 
-                y_pred = self.model.predict(x_test)
-                y_proba = self.model.predict_proba(x_test)
+            self.model.fit(
+                x_train, y_train,
+                eval_set=(x_test, y_test),
+                early_stopping_rounds=50,
+                verbose=False
+            )
 
-                recall_scores.append(recall_score(y_test, y_pred))
-                f1_scores.append(f1_score(y_test, y_pred))
-                precision, recall_pr, _ = precision_recall_curve(y_test, y_proba[:, 1])
-                pr_auc_scores.append(auc(recall_pr, precision))
+            y_pred = self.model.predict(x_test)
+            y_proba = self.model.predict_proba(x_test)
+
+            recall_scores.append(recall_score(y_test, y_pred))
+            f1_scores.append(f1_score(y_test, y_pred))
+            precision, recall_pr, _ = precision_recall_curve(y_test, y_proba[:, 1])
+            pr_auc_scores.append(auc(recall_pr, precision))
 
             self.logger.info("Создание и запись PR-Curve")
 
