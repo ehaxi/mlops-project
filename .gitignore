@@ -177,3 +177,8 @@ cython_debug/
 
 # Kaggle API
 kaggle.json
+
+.vscode/
+catboost_info/
+logs/
+mlflow_server/
