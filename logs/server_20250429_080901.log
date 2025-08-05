@@ -1,7 +1,0 @@
-2025-04-29 08:09:01,904 - __main__ - INFO - Запуск MLflow Tracking Server:
-2025-04-29 08:09:01,904 - __main__ - INFO - Backend URI: sqlite:///E:\prod_framework_ml\mlflow_server\data_local
-2025-04-29 08:09:01,905 - __main__ - INFO - Artifact Root: file:///E:\prod_framework_ml\mlflow_server\artifacts
-2025-04-29 08:09:01,905 - __main__ - INFO - URL: http://127.0.0.1:5000
-
-2025-05-02 07:06:48,410 - __main__ - INFO - Получен сигнал завершения. Остановка MLflow сервера...
-2025-05-02 07:06:48,415 - __main__ - INFO - Сервер MLflow остановлен
